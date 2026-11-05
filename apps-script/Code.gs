@@ -264,7 +264,7 @@ function sheet_(id) {
   var sh = ss.getSheetByName(id);
   if (sh) return sh;
   sh = ss.insertSheet(id, 0);
-  sh.getRange(1, 1, 1, FIELDS.length).setValues([FIELDS]).setFontWeight('bold').setBackground('#1e9e5a').setFontColor('#ffffff');
+  sh.getRange(1, 1, 1, FIELDS.length).setValues([FIELDS]).setFontWeight('bold').setBackground('#1a7cf5').setFontColor('#ffffff');
   sh.setFrozenRows(1);
   sh.getRange('B:B').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   sh.getRange('A:A').setNumberFormat('@');
