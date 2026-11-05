@@ -1,283 +1,330 @@
 /**
- * PK수학 2027 겨울방학 특강 — 선착순 신청 접수 백엔드 (Google Apps Script)
+ * PK수학 특강 선착순 신청 — 서버 (Google Apps Script)
  *
- * - 학부모 신청 페이지(index.html)에서 보낸 신청서를 이 스프레드시트의 '신청내역' 시트에 한 줄씩 기록합니다.
- * - 반별 정원(9명)을 서버에서 잠금(LockService)으로 확인하므로, 동시에 신청이 몰려도 정원을 넘지 않습니다.
- * - 정원이 찬 뒤 들어온 신청은 '대기'로 접수됩니다.
- * - 관리자는 시트에서 상태(접수/대기/취소)와 결제안내·결제완료 체크박스를 직접 관리합니다.
- *   상태를 '취소'로 바꾸면 그 자리가 남은 자리로 다시 잡히고, 대기자를 '접수'로 바꾸면 정원에 포함됩니다.
+ * 하는 일
+ *  - 학부모 신청 페이지(index.html)의 신청을 받아 이 스프레드시트에 시즌별 탭으로 기록합니다.
+ *  - 반별 정원을 잠금(LockService)으로 지켜, 동시에 몰려도 정원을 넘지 않고 초과분은 '대기'로 받습니다.
+ *  - 관리자 페이지(admin.html)에 신청·결제 현황을 보여 주고, 상태·결제 체크·메모 수정과 시즌 설정을 처리합니다.
  *
- * 설치 방법은 저장소 루트의 SETUP.md 를 보세요.
+ * 매 시즌(여름·겨울)마다 코드를 고칠 필요는 없습니다. 관리자 페이지의 '시즌 설정'에서 바꾸면 됩니다.
+ * 시즌 ID를 바꾸면 새 탭에 따로 쌓이고, 지난 시즌 기록은 그대로 남습니다.
+ *
+ * 설치 방법은 저장소의 SETUP.md 를 보세요.
  */
 
-// ───────── 설정 ─────────
-
-/** 반 구성: 운영안 4번 '타임별 실제 배치안' 기준. 코드(T1~T3)는 index.html 과 같아야 합니다. */
-var CLASSES = {
-  T1: { name: '1타임 · 중등부 (월·수·금)', capacity: 9, grades: ['중1', '중2'] },
-  T2: { name: '2타임 · 고등부 A반 (월~금)', capacity: 9, grades: ['중3', '고1', '고2', '고3'] },
-  T3: { name: '3타임 · 고등부 B반 (월~금)', capacity: 9, grades: ['중3', '고1', '고2', '고3'] }
+// 처음 설치했을 때 쓰는 기본 시즌 (운영안 추천안: 3타임 × 2시간, 반별 9명)
+var DEFAULT_SEASON = {
+  id: '2027-겨울',
+  title: 'PK수학 겨울방학 특강',
+  label: 'WINTER 2027',
+  period: '2027년 1~2월 · 5주',
+  openAt: '',   // 접수 시작 'YYYY-MM-DDTHH:mm' (한국시간). 비우면 바로 접수
+  closeAt: '',  // 접수 마감. 비우면 계속 접수
+  fewAt: 3,     // 남은 자리가 이 수 이하이면 '마감임박' 표시
+  contact: '',
+  classes: [
+    { code: 'T1', name: '1타임 중등부', target: '중1·중2', time: '10:00–12:00', days: '월·수·금', sessions: '15회 30시간', price: 400000, capacity: 9 },
+    { code: 'T2', name: '2타임 고등 A반', target: '예비고1~고3', time: '12:00–14:00', days: '월~금 매일', sessions: '25회 50시간', price: 650000, capacity: 9 },
+    { code: 'T3', name: '3타임 고등 B반', target: '예비고1~고3', time: '14:00–16:00', days: '월~금 매일', sessions: '25회 50시간', price: 650000, capacity: 9 }
+  ]
 };
 
-/**
- * 접수 시작 시각(한국시간). 비워두면 바로 접수가 열립니다.
- * 예: '2026-12-01T10:00:00+09:00'
- */
-var OPEN_AT = '';
+var FIELDS = ['접수번호', '접수일시', '상태', '반코드', '반', '수강료', '학생 이름', '결제안내', '결제완료', '관리자 메모'];
+var C = {}; FIELDS.forEach(function (h, i) { C[h] = i + 1; });
+var OK = '접수', WAIT = '대기', CANCEL = '취소';
+var TZ = 'Asia/Seoul';
 
-/** 접수 마감 시각. 비워두면 마감하지 않습니다. */
-var CLOSE_AT = '';
-
-/** 남은 자리가 이 수 이하이면 페이지에 '마감임박'으로 표시합니다. 정확한 인원 수는 학부모에게 공개하지 않습니다. */
-var FEW_AT = 3;
-
-var SHEET_NAME = '신청내역';
-var RECEIPT_PREFIX = 'W27-';
-
-var HEADERS = [
-  '접수번호', '접수일시', '상태', '반', '반코드',
-  '학생 이름', '학교', '학년', '학부모 이름', '학부모 연락처', '학생 연락처',
-  '요청사항', '결제안내', '결제완료', '관리자 메모'
-];
-var COL = {}; // 헤더 이름 → 열 번호(1부터)
-HEADERS.forEach(function (h, i) { COL[h] = i + 1; });
-
-var STATUS_OK = '접수';
-var STATUS_WAIT = '대기';
-var STATUS_CANCEL = '취소';
-
-// ───────── 웹앱 진입점 ─────────
+// ───────── 진입점 ─────────
 
 function doGet(e) {
   var p = (e && e.parameter) || {};
-  try {
-    if (p.action === 'lookup') return json_(lookup_(p.name, p.phone));
-    return json_(status_());
-  } catch (err) {
-    return json_({ ok: false, error: 'server', message: String(err) });
-  }
+  return guard_(function () {
+    if (p.action === 'lookup') return lookup_(p.name);
+    return public_();
+  });
 }
 
 function doPost(e) {
-  try {
-    var body = JSON.parse((e && e.postData && e.postData.contents) || '{}');
-    return json_(apply_(body));
-  } catch (err) {
-    return json_({ ok: false, error: 'server', message: String(err) });
-  }
+  var b = {};
+  try { b = JSON.parse((e && e.postData && e.postData.contents) || '{}'); } catch (err) { return json_(bad_('잘못된 요청입니다.')); }
+  return guard_(function () {
+    if (b.action === 'apply') return apply_(b);
+    if (b.action === 'admin') return admin_(b);
+    return bad_('잘못된 요청입니다.');
+  });
 }
 
-// ───────── 동작 ─────────
+function guard_(fn) {
+  try { return json_(fn()); }
+  catch (err) { return json_({ ok: false, error: 'server', message: '일시적인 오류입니다. 잠시 후 다시 시도해 주세요.', detail: String(err) }); }
+}
 
-function status_() {
-  // 학부모 페이지에는 반별 상태(접수중/마감임박/마감)만 내보내고, 실제 신청 인원은 내보내지 않습니다.
-  var counts = counts_(rows_());
-  var classes = {};
-  Object.keys(CLASSES).forEach(function (code) {
-    var remaining = CLASSES[code].capacity - counts[code].ok;
-    classes[code] = { state: remaining <= 0 ? 'full' : remaining <= FEW_AT ? 'few' : 'open' };
-  });
-  var w = window_();
-  return { ok: true, open: w.open, phase: w.phase, openAt: OPEN_AT, closeAt: CLOSE_AT, classes: classes };
+// ───────── 학부모 ─────────
+
+function public_() {
+  var s = season_();
+  var counts = counts_(rows_(s.id));
+  return {
+    ok: true,
+    phase: phase_(s),
+    season: { title: s.title, label: s.label, period: s.period, openAt: s.openAt, closeAt: s.closeAt, contact: s.contact },
+    // 학부모에게는 실제 인원 대신 상태(open / few / full)만 보냅니다.
+    classes: s.classes.map(function (c) {
+      var left = c.capacity - ((counts[c.code] || {}).ok || 0);
+      return {
+        code: c.code, name: c.name, target: c.target, time: c.time, days: c.days, sessions: c.sessions, price: c.price,
+        state: left <= 0 ? 'full' : left <= s.fewAt ? 'few' : 'open'
+      };
+    })
+  };
 }
 
 function apply_(b) {
-  // 봇 차단용 숨김 칸
-  if (b.website) return { ok: false, error: 'invalid', message: '잘못된 요청입니다.' };
+  if (b.website) return bad_('잘못된 요청입니다.'); // 봇 차단용 숨김 칸
+  var s = season_();
+  var ph = phase_(s);
+  if (ph !== 'open') return { ok: false, error: ph, message: ph === 'before' ? '아직 접수 시작 전입니다.' : '접수가 마감되었습니다.' };
 
-  var w = window_();
-  if (!w.open) {
-    return { ok: false, error: w.phase, message: w.phase === 'before' ? '아직 접수 시작 전입니다.' : '접수가 마감되었습니다.' };
-  }
-
-  var f = {
-    classCode: clean_(b.classCode, 4),
-    studentName: clean_(b.studentName, 20),
-    school: clean_(b.school, 30),
-    grade: clean_(b.grade, 4),
-    parentName: clean_(b.parentName, 20),
-    parentPhone: phone_(b.parentPhone),
-    studentPhone: b.studentPhone ? phone_(b.studentPhone) : '',
-    note: clean_(b.note, 300),
-    agree: b.agree === true
-  };
-
-  var cls = CLASSES[f.classCode];
+  var cls = s.classes.filter(function (c) { return c.code === b.classCode; })[0];
+  var name = clean_(b.studentName, 20);
   if (!cls) return bad_('수강할 반을 선택해 주세요.');
-  if (!f.studentName) return bad_('학생 이름을 입력해 주세요.');
-  if (!f.school) return bad_('학교를 입력해 주세요.');
-  if (cls.grades.indexOf(f.grade) < 0) return bad_(f.grade ? f.grade + ' 학생은 이 반을 신청할 수 없습니다.' : '학년을 선택해 주세요.');
-  if (!f.parentName) return bad_('학부모 이름을 입력해 주세요.');
-  if (!f.parentPhone) return bad_('학부모 연락처를 정확히 입력해 주세요. (예: 010-1234-5678)');
-  if (b.studentPhone && !f.studentPhone) return bad_('학생 연락처 형식을 확인해 주세요.');
-  if (!f.agree) return bad_('개인정보 수집·이용에 동의해 주세요.');
+  if (!name) return bad_('학생 이름을 입력해 주세요.');
+  if (b.agree !== true) return bad_('개인정보 수집·이용에 동의해 주세요.');
 
   var lock = LockService.getScriptLock();
-  if (!lock.tryLock(20000)) {
-    return { ok: false, error: 'busy', message: '신청이 몰려 처리가 지연되고 있습니다. 잠시 후 다시 시도해 주세요.' };
-  }
+  if (!lock.tryLock(20000)) return { ok: false, error: 'busy', message: '신청이 몰려 처리가 늦어지고 있습니다. 잠시 후 다시 시도해 주세요.' };
   try {
-    var sheet = sheet_();
-    var rows = rows_(sheet);
+    var sh = sheet_(s.id);
+    var rows = rows_(s.id, sh);
+    var dup = rows.filter(function (r) { return r.status !== CANCEL && r.name === name; })[0];
+    if (dup) return { ok: false, error: 'duplicate', message: name + ' 학생은 이미 신청되어 있습니다. (' + dup.className + ' · ' + dup.status + ')\n반 변경은 학원으로 연락 주세요.' };
 
-    // 같은 학생(이름+학부모 연락처)이 이미 접수/대기 중이면 중복 신청 차단
-    var dup = rows.filter(function (r) {
-      return r.status !== STATUS_CANCEL && r.studentName === f.studentName && r.parentPhone === f.parentPhone;
-    })[0];
-    if (dup) {
-      return {
-        ok: false, error: 'duplicate',
-        message: '이미 신청된 학생입니다. (' + dup.receiptNo + ' · ' + dup.className + ' · ' + dup.status + ')\n반 변경은 학원으로 연락 주세요.'
-      };
-    }
-
-    var counts = counts_(rows);
-    var status = counts[f.classCode].ok < cls.capacity ? STATUS_OK : STATUS_WAIT;
-    var receiptNo = RECEIPT_PREFIX + ('000' + (rows.length + 1)).slice(-3);
-    var now = new Date();
-
+    var cnt = counts_(rows)[cls.code] || { ok: 0, wait: 0 };
+    var status = cnt.ok < cls.capacity ? OK : WAIT;
+    var no = ('00' + (rows.length + 1)).slice(-3);
     var row = [];
-    row[COL['접수번호'] - 1] = receiptNo;
-    row[COL['접수일시'] - 1] = now;
-    row[COL['상태'] - 1] = status;
-    row[COL['반'] - 1] = cls.name;
-    row[COL['반코드'] - 1] = f.classCode;
-    row[COL['학생 이름'] - 1] = f.studentName;
-    row[COL['학교'] - 1] = f.school;
-    row[COL['학년'] - 1] = f.grade;
-    row[COL['학부모 이름'] - 1] = f.parentName;
-    row[COL['학부모 연락처'] - 1] = f.parentPhone;
-    row[COL['학생 연락처'] - 1] = f.studentPhone;
-    row[COL['요청사항'] - 1] = f.note;
-    row[COL['결제안내'] - 1] = false;
-    row[COL['결제완료'] - 1] = false;
-    row[COL['관리자 메모'] - 1] = '';
-
-    sheet.appendRow(row);
-    var r = sheet.getLastRow();
-    sheet.getRange(r, COL['결제안내'], 1, 2).insertCheckboxes();
-    sheet.getRange(r, COL['접수일시']).setNumberFormat('yyyy-mm-dd hh:mm:ss');
+    row[C['접수번호'] - 1] = no;
+    row[C['접수일시'] - 1] = new Date();
+    row[C['상태'] - 1] = status;
+    row[C['반코드'] - 1] = cls.code;
+    row[C['반'] - 1] = cls.name;
+    row[C['수강료'] - 1] = cls.price;
+    row[C['학생 이름'] - 1] = name;
+    row[C['결제안내'] - 1] = false;
+    row[C['결제완료'] - 1] = false;
+    row[C['관리자 메모'] - 1] = '';
+    sh.appendRow(row);
+    sh.getRange(sh.getLastRow(), C['결제안내'], 1, 2).insertCheckboxes();
     SpreadsheetApp.flush();
-
-    var waitingNo = status === STATUS_WAIT ? counts[f.classCode].wait + 1 : 0;
-    return {
-      ok: true, status: status, receiptNo: receiptNo, className: cls.name,
-      waitingNo: waitingNo
-    };
+    return { ok: true, status: status, receiptNo: no, className: cls.name, waitingNo: status === WAIT ? cnt.wait + 1 : 0 };
   } finally {
     lock.releaseLock();
   }
 }
 
-/** 학부모가 이름+연락처로 본인 신청 상태를 확인. 개인정보는 돌려주지 않습니다. */
-function lookup_(name, phone) {
-  var n = clean_(name, 20), ph = phone_(phone);
-  if (!n || !ph) return bad_('학생 이름과 학부모 연락처를 정확히 입력해 주세요.');
-  var rows = rows_();
-  var waitOrder = {};
-  var found = [];
-  rows.forEach(function (r) {
-    if (r.status === STATUS_WAIT) waitOrder[r.classCode] = (waitOrder[r.classCode] || 0) + 1;
-    if (r.studentName === n && r.parentPhone === ph) {
-      found.push({
-        receiptNo: r.receiptNo, className: r.className, status: r.status,
-        waitingNo: r.status === STATUS_WAIT ? waitOrder[r.classCode] : 0,
-        appliedAt: r.appliedAt ? Utilities.formatDate(r.appliedAt, 'Asia/Seoul', 'M월 d일 HH:mm') : '',
-        paymentNotified: r.paymentNotified, paid: r.paid
-      });
-    }
+function lookup_(name) {
+  var n = clean_(name, 20);
+  if (!n) return bad_('학생 이름을 입력해 주세요.');
+  var s = season_(), order = {}, out = [];
+  rows_(s.id).forEach(function (r) {
+    if (r.status === WAIT) order[r.code] = (order[r.code] || 0) + 1;
+    if (r.name === n) out.push({
+      receiptNo: r.no, className: r.className, status: r.status,
+      waitingNo: r.status === WAIT ? order[r.code] : 0,
+      appliedAt: r.at ? Utilities.formatDate(r.at, TZ, 'M월 d일 HH:mm') : '',
+      notified: r.notified, paid: r.paid
+    });
   });
-  return { ok: true, results: found };
+  return { ok: true, results: out };
+}
+
+// ───────── 관리자 ─────────
+
+function admin_(b) {
+  var props = PropertiesService.getScriptProperties();
+  var hasPw = !!props.getProperty('ADMIN_HASH');
+
+  if (b.op === 'hasPassword') return { ok: true, hasPassword: hasPw };
+  if (b.op === 'setPassword') {
+    if (hasPw) return bad_('이미 비밀번호가 설정되어 있습니다.');
+    if (!b.key || String(b.key).length < 6) return bad_('비밀번호는 6자 이상으로 정해 주세요.');
+    var salt = Utilities.getUuid();
+    props.setProperties({ ADMIN_SALT: salt, ADMIN_HASH: hash_(salt, b.key) });
+    return { ok: true };
+  }
+  var auth = auth_(props, b.key);
+  if (auth) return auth;
+
+  if (b.op === 'login') return { ok: true };
+  if (b.op === 'dashboard') return dashboard_(b.seasonId);
+  if (b.op === 'update') return update_(b);
+  if (b.op === 'saveSeason') return saveSeason_(b.season);
+  if (b.op === 'changePassword') {
+    if (!b.newKey || String(b.newKey).length < 6) return bad_('비밀번호는 6자 이상으로 정해 주세요.');
+    var s2 = Utilities.getUuid();
+    props.setProperties({ ADMIN_SALT: s2, ADMIN_HASH: hash_(s2, b.newKey) });
+    return { ok: true };
+  }
+  return bad_('알 수 없는 요청입니다.');
+}
+
+function auth_(props, key) {
+  var cache = CacheService.getScriptCache();
+  var fails = Number(cache.get('ADMIN_FAILS') || 0);
+  if (fails >= 10) return { ok: false, error: 'locked', message: '비밀번호를 여러 번 틀려 10분간 잠겼습니다.' };
+  var salt = props.getProperty('ADMIN_SALT'), h = props.getProperty('ADMIN_HASH');
+  if (!h) return { ok: false, error: 'nopassword', message: '관리자 비밀번호를 먼저 만들어 주세요.' };
+  if (!key || hash_(salt, key) !== h) {
+    cache.put('ADMIN_FAILS', String(fails + 1), 600);
+    return { ok: false, error: 'auth', message: '비밀번호가 맞지 않습니다.' };
+  }
+  return null;
+}
+
+function dashboard_(seasonId) {
+  var s = season_();
+  var id = seasonId || s.id;
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var seasons = ss.getSheets().filter(isSeasonSheet_).map(function (x) { return x.getName(); });
+  if (seasons.indexOf(s.id) < 0) seasons.unshift(s.id);
+  var rows = ss.getSheetByName(id) ? rows_(id) : [];
+  return {
+    ok: true, season: s, viewing: id, seasons: seasons, phase: phase_(s),
+    rows: rows.map(function (r) {
+      return { no: r.no, at: r.at ? Utilities.formatDate(r.at, TZ, 'MM-dd HH:mm:ss') : '', status: r.status, code: r.code,
+        className: r.className, price: r.price, name: r.name, notified: r.notified, paid: r.paid, memo: r.memo };
+    })
+  };
+}
+
+function update_(b) {
+  var id = b.seasonId || season_().id;
+  var col = { status: C['상태'], notified: C['결제안내'], paid: C['결제완료'], memo: C['관리자 메모'] }[b.field];
+  if (!col) return bad_('수정할 수 없는 항목입니다.');
+  var v = b.value;
+  if (b.field === 'status' && [OK, WAIT, CANCEL].indexOf(v) < 0) return bad_('상태 값이 올바르지 않습니다.');
+  if (b.field === 'notified' || b.field === 'paid') v = v === true;
+  if (b.field === 'memo') v = clean_(v, 300);
+
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) return { ok: false, error: 'busy', message: '잠시 후 다시 시도해 주세요.' };
+  try {
+    var r = rows_(id).filter(function (x) { return x.no === String(b.receiptNo); })[0];
+    if (!r) return bad_('해당 신청을 찾을 수 없습니다.');
+    sheet_(id).getRange(r.rowIndex, col).setValue(v);
+    return { ok: true };
+  } finally { lock.releaseLock(); }
+}
+
+function saveSeason_(x) {
+  if (!x || typeof x !== 'object') return bad_('시즌 정보가 없습니다.');
+  var id = String(x.id || '').trim();
+  if (!id || id.length > 40 || /[\[\]\*\?:\/\\']/.test(id)) return bad_('시즌 ID에는 [ ] * ? : / \\ \' 를 쓸 수 없습니다. 예: 2027-여름');
+  var codes = {};
+  var classes = (x.classes || []).map(function (c, i) {
+    var code = String(c.code || ('T' + (i + 1))).trim().slice(0, 10);
+    return {
+      code: code, name: clean_(c.name, 30), target: clean_(c.target, 30), time: clean_(c.time, 30),
+      days: clean_(c.days, 30), sessions: clean_(c.sessions, 30),
+      price: Math.max(0, Math.round(Number(c.price) || 0)), capacity: Math.max(1, Math.round(Number(c.capacity) || 1))
+    };
+  });
+  if (!classes.length) return bad_('반을 하나 이상 넣어 주세요.');
+  for (var i = 0; i < classes.length; i++) {
+    if (!classes[i].name) return bad_((i + 1) + '번째 반 이름을 입력해 주세요.');
+    if (codes[classes[i].code]) return bad_('반 코드가 겹칩니다: ' + classes[i].code);
+    codes[classes[i].code] = 1;
+  }
+  var s = {
+    id: id, title: clean_(x.title, 40) || 'PK수학 특강', label: clean_(x.label, 30), period: clean_(x.period, 40),
+    openAt: date_(x.openAt), closeAt: date_(x.closeAt), fewAt: Math.max(0, Math.round(Number(x.fewAt) || 0)),
+    contact: clean_(x.contact, 30), classes: classes
+  };
+  PropertiesService.getScriptProperties().setProperty('SEASON', JSON.stringify(s));
+  sheet_(id);
+  return { ok: true, season: s };
+}
+
+/** 비밀번호를 잊었을 때: Apps Script 편집기에서 이 함수를 한 번 실행하면 관리자 페이지에서 새로 만들 수 있습니다. */
+function resetAdminPassword() {
+  var p = PropertiesService.getScriptProperties();
+  p.deleteProperty('ADMIN_HASH'); p.deleteProperty('ADMIN_SALT');
+  CacheService.getScriptCache().remove('ADMIN_FAILS');
 }
 
 // ───────── 시트 ─────────
 
-function sheet_() {
+function season_() {
+  var raw = PropertiesService.getScriptProperties().getProperty('SEASON');
+  return raw ? JSON.parse(raw) : DEFAULT_SEASON;
+}
+
+function sheet_(id) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sh = ss.getSheetByName(SHEET_NAME);
+  var sh = ss.getSheetByName(id);
   if (sh) return sh;
-  sh = ss.insertSheet(SHEET_NAME, 0);
-  sh.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS])
-    .setFontWeight('bold').setBackground('#1e3a5f').setFontColor('#ffffff');
+  sh = ss.insertSheet(id, 0);
+  sh.getRange(1, 1, 1, FIELDS.length).setValues([FIELDS]).setFontWeight('bold').setBackground('#1e9e5a').setFontColor('#ffffff');
   sh.setFrozenRows(1);
   sh.getRange('B:B').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-  sh.getRange('J:K').setNumberFormat('@');
-  var rule = SpreadsheetApp.newDataValidation()
-    .requireValueInList([STATUS_OK, STATUS_WAIT, STATUS_CANCEL], true).build();
-  sh.getRange(2, COL['상태'], sh.getMaxRows() - 1, 1).setDataValidation(rule);
-  [90, 140, 60, 190, 60, 80, 110, 50, 80, 120, 120, 220, 70, 70, 200]
-    .forEach(function (wd, i) { sh.setColumnWidth(i + 1, wd); });
+  sh.getRange('A:A').setNumberFormat('@');
+  sh.getRange('F:F').setNumberFormat('#,##0');
+  sh.getRange(2, C['상태'], sh.getMaxRows() - 1, 1).setDataValidation(
+    SpreadsheetApp.newDataValidation().requireValueInList([OK, WAIT, CANCEL], true).build());
   return sh;
 }
 
-function rows_(sheet) {
-  var sh = sheet || sheet_();
+function isSeasonSheet_(sh) {
+  return !!sh && sh.getLastColumn() >= FIELDS.length && sh.getRange(1, 1, 1, 3).getValues()[0].join('|') === FIELDS.slice(0, 3).join('|');
+}
+
+function rows_(id, sheet) {
+  var sh = sheet || sheet_(id);
   var last = sh.getLastRow();
   if (last < 2) return [];
-  return sh.getRange(2, 1, last - 1, HEADERS.length).getValues()
-    .filter(function (v) { return v[COL['접수번호'] - 1] !== ''; })
-    .map(function (v) {
-      return {
-        receiptNo: String(v[COL['접수번호'] - 1]),
-        appliedAt: v[COL['접수일시'] - 1] instanceof Date ? v[COL['접수일시'] - 1] : null,
-        status: String(v[COL['상태'] - 1]).trim(),
-        className: String(v[COL['반'] - 1]),
-        classCode: String(v[COL['반코드'] - 1]).trim(),
-        studentName: String(v[COL['학생 이름'] - 1]).trim(),
-        parentPhone: phone_(v[COL['학부모 연락처'] - 1]),
-        paymentNotified: v[COL['결제안내'] - 1] === true,
-        paid: v[COL['결제완료'] - 1] === true
-      };
+  var out = [];
+  sh.getRange(2, 1, last - 1, FIELDS.length).getValues().forEach(function (v, i) {
+    var g = function (h) { return v[C[h] - 1]; };
+    if (g('접수번호') === '') return;
+    out.push({
+      rowIndex: i + 2, no: String(g('접수번호')), at: g('접수일시') instanceof Date ? g('접수일시') : null,
+      status: String(g('상태')).trim(), code: String(g('반코드')).trim(), className: String(g('반')),
+      price: Number(g('수강료')) || 0, name: String(g('학생 이름')).trim(),
+      notified: g('결제안내') === true, paid: g('결제완료') === true, memo: String(g('관리자 메모'))
     });
+  });
+  return out;
 }
 
 function counts_(rows) {
   var c = {};
-  Object.keys(CLASSES).forEach(function (k) { c[k] = { ok: 0, wait: 0 }; });
   rows.forEach(function (r) {
-    if (!c[r.classCode]) return;
-    if (r.status === STATUS_OK) c[r.classCode].ok++;
-    else if (r.status === STATUS_WAIT) c[r.classCode].wait++;
+    c[r.code] = c[r.code] || { ok: 0, wait: 0 };
+    if (r.status === OK) c[r.code].ok++;
+    else if (r.status === WAIT) c[r.code].wait++;
   });
   return c;
 }
 
-/** 시트 상단 메뉴: 시트를 처음 만들 때 쓰세요. */
-function onOpen() {
-  SpreadsheetApp.getUi().createMenu('PK수학 특강')
-    .addItem('신청내역 시트 만들기', 'setupSheet')
-    .addToUi();
-}
-
-function setupSheet() {
-  sheet_();
-  SpreadsheetApp.getActiveSpreadsheet().toast('신청내역 시트가 준비되었습니다.');
-}
-
 // ───────── 도우미 ─────────
 
-function window_() {
+function phase_(s) {
   var now = Date.now();
-  if (OPEN_AT && now < new Date(OPEN_AT).getTime()) return { open: false, phase: 'before' };
-  if (CLOSE_AT && now >= new Date(CLOSE_AT).getTime()) return { open: false, phase: 'closed' };
-  return { open: true, phase: 'open' };
+  if (s.openAt && now < kst_(s.openAt)) return 'before';
+  if (s.closeAt && now >= kst_(s.closeAt)) return 'closed';
+  return 'open';
 }
+function kst_(v) { return new Date(String(v).length <= 16 ? v + ':00+09:00' : v).getTime(); }
+function date_(v) { v = String(v || '').trim(); return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(v) ? v : ''; }
 
 function clean_(v, max) {
-  // 수식 주입 방지: = + - @ 로 시작하는 값은 앞에 ' 를 붙입니다.
   var s = String(v == null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, max);
-  return /^[=+\-@]/.test(s) ? "'" + s : s;
+  return s.replace(/^[=+\-@]+/, ''); // 시트 수식 주입 방지
 }
 
-function phone_(v) {
-  var d = String(v == null ? '' : v).replace(/\D/g, '');
-  if (!/^01[016789]\d{7,8}$/.test(d)) return '';
-  return d.length === 11 ? d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7)
-                         : d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
+function hash_(salt, key) {
+  return Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, salt + ':' + key, Utilities.Charset.UTF_8));
 }
 
-function bad_(message) { return { ok: false, error: 'invalid', message: message }; }
-
-function json_(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}
+function bad_(m) { return { ok: false, error: 'invalid', message: m }; }
+function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }

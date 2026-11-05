@@ -1,0 +1,56 @@
+/* 페이퍼로지 (Paperlogy) — 눈누 배포본 */
+@font-face{font-family:"Paperlogy";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2") format("woff2");font-weight:400;font-display:swap;}
+@font-face{font-family:"Paperlogy";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2") format("woff2");font-weight:500;font-display:swap;}
+@font-face{font-family:"Paperlogy";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2") format("woff2");font-weight:600;font-display:swap;}
+@font-face{font-family:"Paperlogy";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2") format("woff2");font-weight:700;font-display:swap;}
+@font-face{font-family:"Paperlogy";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2") format("woff2");font-weight:800;font-display:swap;}
+
+:root{
+  color-scheme: light;
+  --bg:#eef8f0;
+  --bg-2:#e1f3e6;
+  --card:#ffffff;
+  --ink:#0f2a1c;
+  --ink-2:#36574a;
+  --mute:#6f8a7c;
+  --line:#cfe6d6;
+  --green:#1e9e5a;
+  --green-d:#0e6b3b;
+  --green-l:#d6f2df;
+  --lime:#b9ec7a;
+  --hot:#ff5a36;
+  --hot-l:#ffe7df;
+  --gray:#9fb2a7;
+  --font:"Paperlogy","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+button,input,select,textarea{font-family:inherit;}
+.demo{background:var(--green-d);color:#fff;font-size:12.5px;text-align:center;padding:6px 16px;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:14px 20px;font-size:16px;font-weight:700;cursor:pointer;background:var(--green);color:#fff;transition:background .15s, transform .1s;}
+.btn:hover:not(:disabled){background:var(--green-d);}
+.btn:active:not(:disabled){transform:translateY(1px);}
+.btn:disabled{background:#bcd3c4;cursor:not-allowed;}
+.btn.ghost{background:#fff;color:var(--green-d);border:1.5px solid var(--line);}
+.btn.ghost:hover:not(:disabled){background:var(--green-l);}
+.btn.sm{padding:8px 14px;font-size:14px;border-radius:10px;}
+
+input[type=text],input[type=password],input[type=number],input[type=datetime-local],select,textarea{
+  width:100%;font-size:16px;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;outline:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 4px #1e9e5a22;}
+
+/* 깜빡이는 상태 표시 */
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+.tag::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;}
+.tag.open{background:var(--green-l);color:var(--green-d);}
+.tag.open::before{animation:blink 1s steps(2,start) infinite;}
+.tag.few{background:var(--hot);color:#fff;animation:flash 1s ease-in-out infinite;}
+.tag.few::before{background:#fff;animation:blink .6s steps(2,start) infinite;}
+.tag.full{background:#e6ece8;color:var(--mute);}
+.tag.full::before{background:var(--gray);}
+@keyframes blink{to{visibility:hidden;}}
+@keyframes flash{0%,100%{box-shadow:0 0 0 0 #ff5a3666;filter:brightness(1);}50%{box-shadow:0 0 0 6px #ff5a3600;filter:brightness(1.15);}}
+@media (prefers-reduced-motion:reduce){.tag,.tag::before{animation:none !important;}}
