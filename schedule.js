@@ -5,7 +5,7 @@ window.PK_SCHEDULE = {
   months: ["2026-11", "2026-12", "2027-01", "2027-02"],
 
   // 특강 기간 (이 사이의 월~금이 수업일로 표시됩니다)
-  classFrom: "2027-01-04",
+  classFrom: "2027-01-11",
   classTo: "2027-02-26",
 
   // 특강 기간 중 쉬는 기간 (휴강 주)
@@ -20,7 +20,7 @@ window.PK_SCHEDULE = {
     { date: "2026-11-27", short: "결제 안내", label: "‘결제선생’ 특강비 결제 안내 일괄 발송", type: "pay" },
     { date: "2026-12-18", short: "결제 마감", label: "특강비 결제 마감 · 결제 완료 시 신청 확정", type: "due" },
     { date: "2026-12-28", short: "교재 안내", label: "개별 커리큘럼·교재 일괄 안내", type: "info" },
-    { date: "2027-01-04", short: "개강", label: "개강", type: "class" },
+    { date: "2027-01-11", short: "개강", label: "개강", type: "class" },
     { date: "2027-02-26", short: "종강", label: "종강", type: "class" },
   ],
 
