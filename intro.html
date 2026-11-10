@@ -76,6 +76,14 @@
   .row dd{margin:0;font-size:15.5px;font-weight:600;color:var(--ink);word-break:keep-all;}
   .row dd small{display:block;font-size:13px;font-weight:500;color:var(--mute);margin-top:2px;}
 
+  .grade-guide{background:#fff8e6;border:1.5px solid #f6dc9a;border-radius:16px;padding:14px 16px;margin:0 0 14px;color:#5a4000;word-break:keep-all;}
+  .grade-guide .gt{font-size:15px;font-weight:800;color:#3d2b00;margin:0 0 6px;}
+  .grade-guide .gt mark{background:linear-gradient(transparent 55%,#ffd36b 55%);color:inherit;padding:0 2px;}
+  .grade-guide .ex{font-size:14px;margin:0 0 10px;}
+  .grade-guide .ex b{color:#3d2b00;}
+  .grade-guide ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;}
+  .grade-guide li{display:flex;justify-content:space-between;gap:10px;background:#ffffffb3;border-radius:10px;padding:8px 12px;font-size:13.5px;}
+  .grade-guide li b{color:var(--deep);white-space:nowrap;}
   .slots{display:grid;gap:10px;}
   .slot{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center;}
   .slot .no{grid-row:1/3;width:52px;height:52px;border-radius:14px;background:var(--soft);color:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;line-height:1;}
@@ -185,7 +193,7 @@
     <p class="kicker">PROGRAM</p>
     <h2>🔷 PK수학 2027 겨울특강 안내</h2>
     <dl class="info">
-      <div class="row"><dt>대상 학년</dt><dd>중1 ~ 고3<small>PK 재원생 대상</small></dd></div>
+      <div class="row"><dt>대상 학년</dt><dd>중1 ~ 고3<small>PK 재원생 대상 · 2027년 새 학년 기준</small></dd></div>
       <div class="row"><dt>특강 기간</dt><dd>2027년 1월 11일(월) ~ 2월 26일(금)<small>총 6주 집중 과정 · 설 연휴 주(2/8~2/12) 휴강</small></dd></div>
       <div class="row"><dt>수업 방식</dt><dd>1:1 맞춤 선행 커리큘럼<small>타임별 정원제 · 배정 타임 정시 등원</small></dd></div>
     </dl>
@@ -194,6 +202,14 @@
   <section>
     <p class="kicker">TIMETABLE</p>
     <h2>시간표 <span style="font-size:15px;color:var(--hot);font-weight:800">· 선착순 마감</span></h2>
+    <div class="grade-guide">
+      <p class="gt">📌 학년부는 <mark>2027년 새 학년 기준</mark>으로 신청해 주세요.</p>
+      <p class="ex">예) 2026년 <b>중학교 3학년</b>은 <b>예비 고1</b>이므로 <b>고등부</b>로 신청합니다.</p>
+      <ul>
+        <li><span>2026년 중1 · 중2 (예비 중2 · 중3)</span><b>중등부 · 1타임</b></li>
+        <li><span>2026년 중3 ~ 고2 (예비 고1 ~ 고3)</span><b>고등부 · 2·3타임</b></li>
+      </ul>
+    </div>
     <div class="slots">
       <div class="slot" data-code="T1"><div class="no">1<small>타임</small></div><div class="t">10:00 ~ 12:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">중등부 · 월·수·금 (주 3회)</div></div>
       <div class="slot" data-code="T2"><div class="no">2<small>타임</small></div><div class="t">13:00 ~ 15:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">고등부 · 월~금 (주 5일 매일반)</div></div>

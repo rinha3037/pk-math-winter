@@ -46,6 +46,14 @@
   .h h2{margin:0;font-size:20px;font-weight:800;letter-spacing:-.01em;}
 
   /* 반 선택 */
+  .grade-guide{background:#fff8e6;border:1.5px solid #f6dc9a;border-radius:16px;padding:14px 16px;margin:0 0 14px;color:#5a4000;word-break:keep-all;}
+  .grade-guide .gt{font-size:15px;font-weight:800;color:#3d2b00;margin:0 0 6px;}
+  .grade-guide .gt mark{background:linear-gradient(transparent 55%,#ffd36b 55%);color:inherit;padding:0 2px;}
+  .grade-guide .ex{font-size:14px;margin:0 0 10px;}
+  .grade-guide .ex b{color:#3d2b00;}
+  .grade-guide ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;}
+  .grade-guide li{display:flex;justify-content:space-between;gap:10px;background:#ffffffb3;border-radius:10px;padding:8px 12px;font-size:13.5px;}
+  .grade-guide li b{color:var(--deep);white-space:nowrap;}
   .classes{display:grid;gap:12px;}
   .cls{position:relative;display:block;cursor:pointer;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:18px 18px 16px;transition:transform .15s, box-shadow .15s, border-color .15s, background .15s;}
   .cls input{position:absolute;opacity:0;pointer-events:none;}
@@ -182,6 +190,14 @@
 
   <section>
     <div class="h"><b>1</b><h2>반 선택</h2></div>
+    <div class="grade-guide">
+      <p class="gt">📌 학년부는 <mark>2027년 새 학년 기준</mark>으로 신청해 주세요.</p>
+      <p class="ex">예) 2026년 <b>중학교 3학년</b>은 <b>예비 고1</b>이므로 <b>고등부</b>로 신청합니다.</p>
+      <ul>
+        <li><span>2026년 중1 · 중2 (예비 중2 · 중3)</span><b>중등부 · 1타임</b></li>
+        <li><span>2026년 중3 ~ 고2 (예비 고1 ~ 고3)</span><b>고등부 · 2·3타임</b></li>
+      </ul>
+    </div>
     <div class="classes" id="classes"></div>
   </section>
 
