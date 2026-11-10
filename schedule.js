@@ -16,8 +16,7 @@ window.PK_SCHEDULE = {
   // 주요 일정. short 는 달력 칸 안에 들어가는 짧은 이름입니다.
   // type: open(신청), pay(결제 안내), due(결제 마감 — 강조), info(안내), class(개강·종강)
   events: [
-    { date: "2026-11-16", short: "신청 시작", label: "특강 신청 시작 (선착순)", type: "open" },
-    { date: "2026-11-27", short: "결제 안내", label: "‘결제선생’ 특강비 결제 안내 일괄 발송", type: "pay" },
+    { date: "2026-11-16", short: "신청 시작", label: "특강 신청 시작 (선착순) · 신청 후 1~2일 이내 ‘결제선생’ 결제 안내", type: "open" },
     { date: "2026-12-18", short: "결제 마감", label: "특강비 결제 마감 · 결제 완료 시 신청 확정", type: "due" },
     { date: "2026-12-28", short: "교재 안내", label: "개별 커리큘럼·교재 일괄 안내", type: "info" },
     { date: "2027-01-11", short: "개강", label: "개강", type: "class" },
