@@ -84,6 +84,12 @@
   .notes li::before{content:"✓";position:absolute;left:14px;top:12px;width:20px;height:20px;border-radius:50%;background:var(--soft);color:var(--primary);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
   .notes b{color:var(--ink);}
   .notes .pay{border-color:var(--primary);background:#f3f9ff;}
+  .timeline{list-style:none;margin:0 0 12px;padding:6px 16px;background:#fff;border:1.5px solid var(--line);border-radius:14px;}
+  .timeline li{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:baseline;padding:10px 0 10px 18px;position:relative;font-size:14.5px;color:var(--ink-2);}
+  .timeline li + li{border-top:1px dashed var(--line);}
+  .timeline li::before{content:"";position:absolute;left:0;top:17px;width:9px;height:9px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px var(--soft);}
+  .timeline .d{font-weight:800;color:var(--primary);white-space:nowrap;}
+  .timeline b{color:var(--ink);}
 
   /* 신청 확인 */
   .lk{display:flex;gap:10px;}
@@ -152,10 +158,19 @@
 
   <section>
     <div class="h"><b>3</b><h2>안내</h2></div>
+    <!-- 시즌마다 바꾸는 곳: 주요 일정과 안내 문구 -->
+    <ol class="timeline">
+      <li><span class="d">12.18 (금)</span><span><b>특강비 결제 마감</b> · 결제 완료 시 신청 확정</span></li>
+      <li><span class="d">12.28 (월)</span><span>개별 커리큘럼·교재 일괄 안내</span></li>
+      <li><span class="d">1.4 (월)</span><span><b>개강</b></span></li>
+      <li><span class="d">2.26 (금)</span><span>종강</span></li>
+    </ol>
     <ul class="notes">
       <li>신청해주시는 <b>선착순으로 마감</b>되며, 정원이 찬 반은 <b>대기</b>로 접수됩니다.</li>
-      <li class="pay">선착순 접수가 되면, 정해진 일정에 <b>‘결제선생’으로 수강료 결제를 안내</b>해 드립니다. 지금은 결제하지 않으셔도 됩니다.</li>
-      <li>안내된 기한 안에 결제가 되지 않으면 대기자에게 자리가 넘어갈 수 있습니다.</li>
+      <li class="pay">접수 후 <b>‘결제선생’으로 특강비 결제를 안내</b>해 드립니다. <b>12월 18일(금)까지 결제가 완료되어야 신청이 최종 확정</b>됩니다.</li>
+      <li>기한 안에 결제가 되지 않으면 대기자에게 자리가 넘어갈 수 있습니다.</li>
+      <li>개별 커리큘럼 및 교재는 <b>12월 28일(월)</b>에 일괄 안내해 드립니다.</li>
+      <li>겨울방학 기간에는 <b>신청한 반의 시간표에 맞춰 등원</b>해 주세요.</li>
       <li>반 변경·취소는 학원으로 연락 주세요.</li>
     </ul>
   </section>
@@ -281,7 +296,7 @@ function openSlip(r) {
   $("mIcon").textContent = ok ? "✓" : r.waitingNo;
   $("mTitle").textContent = ok ? "선착순 접수 완료!" : `대기 ${r.waitingNo}번으로 접수되었습니다`;
   $("mBody").innerHTML = "";
-  (ok ? [`${r.className} 신청이 완료되었습니다.`, "정해진 일정에 ‘결제선생’으로 특강비 결제 안내를 보내드립니다."]
+  (ok ? [`${r.className} 신청이 완료되었습니다.`, "정해진 일정에 ‘결제선생’으로 특강비 결제 안내를 보내드립니다.", "12월 18일(금)까지 결제가 완료되어야 신청이 최종 확정됩니다."]
       : [`${r.className}은 정원이 마감되었습니다.`, "자리가 생기면 순서대로 연락드리겠습니다."])
     .forEach((t) => { const p = document.createElement("p"); p.textContent = t; $("mBody").appendChild(p); });
   $("modal").classList.add("show");
