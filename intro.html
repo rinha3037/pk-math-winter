@@ -16,6 +16,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="common.css">
+<script src="top.js"></script>
 <style>
   body{padding-bottom:96px;}
   .wrap{max-width:680px;margin:0 auto;padding:0 16px;}
@@ -130,7 +131,10 @@
 
   /* 하단 고정 신청 버튼 */
   .sticky{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 30%);z-index:5;}
-  .sticky .btn{display:flex;max-width:680px;margin:0 auto;width:100%;font-size:17px;padding:16px;box-shadow:0 10px 24px -8px #0b1a4a80;}
+  .sticky .btn{display:flex;max-width:680px;margin:0 auto;width:100%;font-size:17px;padding:16px;box-shadow:0 10px 24px -8px #0b1a4a80;position:relative;overflow:hidden;animation:ctaPulse 1.4s ease-in-out infinite;}
+  .sticky .btn::before{content:"";position:absolute;top:0;bottom:0;left:-50%;width:35%;background:linear-gradient(100deg,transparent,#ffffffb3,transparent);transform:skewX(-20deg);animation:ctaShine 2.2s ease-in-out infinite;pointer-events:none;}
+  @keyframes ctaPulse{0%,100%{box-shadow:0 10px 24px -8px #0b1a4a80,0 0 0 0 #1a7cf5aa;filter:brightness(1);}50%{box-shadow:0 10px 24px -8px #0b1a4a80,0 0 0 9px #1a7cf500;filter:brightness(1.18);}}
+  @keyframes ctaShine{0%{left:-50%;}55%,100%{left:130%;}}
   .sticky .btn i{font-style:normal;font-size:12.5px;font-weight:700;background:#ffffff2e;border-radius:999px;padding:3px 9px;}
 
   @media (max-width:480px){
@@ -158,7 +162,7 @@
         <p class="greet">안녕하세요. <b>PK수학 원장 박선혜</b>입니다.<br>2027 겨울특강을 안내드립니다.</p>
         <div class="cta">
           <a class="btn white" href="./">선착순 신청하러 가기 →</a>
-          <a class="btn line" href="#info">특강 내용 보기</a>
+          <a class="btn line" href="#info" onclick="event.preventDefault();document.getElementById('info').scrollIntoView({behavior:'smooth'})">특강 내용 보기</a>
         </div>
       </div>
     </div>
