@@ -85,17 +85,31 @@
   .grade-guide li{display:flex;justify-content:space-between;gap:10px;background:#ffffffb3;border-radius:10px;padding:8px 12px;font-size:13.5px;}
   .grade-guide li b{color:var(--deep);white-space:nowrap;}
   .slots{display:grid;gap:10px;}
-  .slot{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center;}
-  .slot .no{grid-row:1/3;width:52px;height:52px;border-radius:14px;background:var(--soft);color:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;line-height:1;}
-  .slot .no small{font-size:11px;font-weight:700;margin-top:3px;}
+  .slots .group + .slot{margin-top:-2px;}
+  :root{--mid:#0e9f9a;--mid-soft:#d8f6f4;--mid-deep:#06605c;}
+  .slot{background:#fff;border:1.5px solid var(--line);border-left:6px solid var(--primary);border-radius:18px;padding:14px 16px 14px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center;}
+  .slot.mid{border-left-color:var(--mid);}
+  .slot .no{grid-row:1/3;min-width:66px;height:58px;padding:0 8px;border-radius:14px;background:var(--soft);color:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:16px;line-height:1.1;}
+  .slot .no small{font-size:12px;font-weight:800;margin-top:4px;background:#fff;border-radius:999px;padding:1px 8px;color:var(--primary);}
+  .slot.mid .no{background:var(--mid-soft);color:var(--mid-deep);}
+  .slot.mid .no small{color:var(--mid);}
   .slot .t{font-size:18px;font-weight:800;letter-spacing:-.01em;}
   .slot .t small{font-size:13px;font-weight:600;color:var(--mute);margin-left:4px;}
   .slot .d{grid-column:2;font-size:14px;color:var(--ink-2);}
+  .slot .d b{color:var(--ink);}
+  .group{display:flex;align-items:center;gap:8px;margin:14px 0 8px;font-size:15px;font-weight:800;}
+  .group:first-child{margin-top:0;}
+  .group i{font-style:normal;font-size:12px;font-weight:700;color:var(--mute);}
+  .group::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--primary);}
+  .group.mid::before{background:var(--mid);}
+  .group.mid{color:var(--mid-deep);} .group.high{color:var(--deep);}
   .slot .tag{grid-column:3;grid-row:1/3;}
 
   .fees{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .fee{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:18px;}
   .fee .k{font-size:14px;font-weight:800;color:var(--primary);}
+  .fee.mid{border-top:5px solid var(--mid);} .fee.mid .k{color:var(--mid);}
+  .fee:not(.mid){border-top:5px solid var(--primary);}
   .fee .v{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 2px;}
   .fee .v small{font-size:16px;font-weight:700;margin-left:2px;}
   .fee .s{font-size:13px;color:var(--mute);}
@@ -206,14 +220,16 @@
       <p class="gt">📌 학년부는 <mark>2027년 새 학년 기준</mark>으로 신청해 주세요.</p>
       <p class="ex">예) 2026년 <b>중학교 3학년</b>은 <b>예비 고1</b>이므로 <b>고등부</b>로 신청합니다.</p>
       <ul>
-        <li><span>2026년 중1 · 중2 (예비 중2 · 중3)</span><b>중등부 · 1타임</b></li>
-        <li><span>2026년 중3 ~ 고2 (예비 고1 ~ 고3)</span><b>고등부 · 2·3타임</b></li>
+        <li><span>2026년 중1 · 중2 (예비 중2 · 중3)</span><b>중등부</b></li>
+        <li><span>2026년 중3 ~ 고2 (예비 고1 ~ 고3)</span><b>고등부 1타임 · 2타임</b></li>
       </ul>
     </div>
     <div class="slots">
-      <div class="slot" data-code="T1"><div class="no">1<small>타임</small></div><div class="t">10:00 ~ 12:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">중등부 · 월·수·금 (주 3회)</div></div>
-      <div class="slot" data-code="T2"><div class="no">2<small>타임</small></div><div class="t">13:00 ~ 15:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">고등부 · 월~금 (주 5일 매일반)</div></div>
-      <div class="slot" data-code="T3"><div class="no">3<small>타임</small></div><div class="t">15:00 ~ 17:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">고등부 · 월~금 (주 5일 매일반)</div></div>
+      <div class="group mid">중등부 <i>예비 중2 · 중3</i></div>
+      <div class="slot mid" data-code="T1"><div class="no">중등부<small>주 3회</small></div><div class="t">10:00 ~ 12:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">월·수·금 (주 3회)</div></div>
+      <div class="group high">고등부 <i>예비 고1 ~ 고3</i></div>
+      <div class="slot" data-code="T2"><div class="no">고등부<small>1타임</small></div><div class="t">12:00 ~ 14:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">월~금 (주 5일 매일반)</div></div>
+      <div class="slot" data-code="T3"><div class="no">고등부<small>2타임</small></div><div class="t">14:00 ~ 16:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">월~금 (주 5일 매일반)</div></div>
     </div>
   </section>
 
@@ -221,7 +237,7 @@
     <p class="kicker">TUITION</p>
     <h2>수강료</h2>
     <div class="fees">
-      <div class="fee"><div class="k">중등부</div><div class="v">45<small>만 원</small></div><div class="s">주 3회반 · 총 36시간</div></div>
+      <div class="fee mid"><div class="k">중등부</div><div class="v">45<small>만 원</small></div><div class="s">주 3회반 · 총 36시간</div></div>
       <div class="fee"><div class="k">고등부</div><div class="v">80<small>만 원</small></div><div class="s">주 5일 매일반 · 총 60시간</div></div>
     </div>
     <div class="deadline">⏰ <span><b>12월 18일(금)까지</b> 타임별 선착순 마감</span></div>
