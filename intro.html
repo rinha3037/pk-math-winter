@@ -31,7 +31,12 @@
   .eyebrow{margin:22px 0 6px;font-size:14px;font-weight:700;color:var(--accent);letter-spacing:.06em;}
   .hero h1{font-size:30px;line-height:1.3;font-weight:800;letter-spacing:-.02em;margin:0;word-break:keep-all;}
   .hero h1 span{color:var(--accent);}
-  .greet{margin:18px 0 0;padding:14px 16px;border-left:3px solid var(--accent);background:#ffffff14;border-radius:0 12px 12px 0;font-size:15px;line-height:1.7;}
+  .greet{margin:20px 0 0;display:flex;align-items:center;gap:14px;background:#ffffff17;border:1px solid #ffffff2e;border-radius:18px;padding:14px 16px;}
+  .greet img{flex:none;width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 0 0 3px #3fe6e6aa, 0 8px 18px -6px #0008;}
+  .greet .who{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.02em;}
+  .greet .who b{color:#fff;font-size:16px;margin-left:4px;letter-spacing:0;}
+  .greet p{margin:0;font-size:15px;line-height:1.65;word-break:keep-all;}
+  .greet p b{color:var(--accent);}
   .hero .cta{margin-top:22px;display:flex;gap:8px;flex-wrap:wrap;}
   .btn.white{background:#fff;color:var(--deep);}
   .btn.white:hover{background:var(--soft);}
@@ -61,7 +66,6 @@
   .slot{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center;}
   .slot .no{grid-row:1/3;width:52px;height:52px;border-radius:14px;background:var(--soft);color:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;line-height:1;}
   .slot .no small{font-size:11px;font-weight:700;margin-top:3px;}
-  .slot.hi .no{background:linear-gradient(135deg,#0b1a4a,#1a4fd0 60%,#1598ff);color:#fff;}
   .slot .t{font-size:18px;font-weight:800;letter-spacing:-.01em;}
   .slot .t small{font-size:13px;font-weight:600;color:var(--mute);margin-left:4px;}
   .slot .d{grid-column:2;font-size:14px;color:var(--ink-2);}
@@ -73,8 +77,6 @@
   .fee .v{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 2px;}
   .fee .v small{font-size:16px;font-weight:700;margin-left:2px;}
   .fee .s{font-size:13px;color:var(--mute);}
-  .fee.hi{background:linear-gradient(135deg,#0b1a4a,#1a4fd0 60%,#1598ff);border-color:transparent;color:#fff;}
-  .fee.hi .k{color:var(--accent);} .fee.hi .s{color:#cfe3ff;}
 
   .deadline{margin-top:12px;display:flex;align-items:center;gap:10px;background:var(--hot-l);border:1.5px solid #ffc9b8;border-radius:16px;padding:14px 16px;font-size:15px;font-weight:700;color:#b33a1c;}
   .deadline b{color:#8f2a10;}
@@ -111,8 +113,6 @@
   .closing p{margin:0;font-size:18px;line-height:1.65;font-weight:700;word-break:keep-all;}
   .closing p span{color:var(--accent);}
   .closing .btn{margin-top:20px;width:100%;font-size:17px;padding:16px;}
-  .contact{margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
-  .contact a{display:inline-flex;align-items:center;gap:6px;color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;background:#ffffff1f;border:1px solid #ffffff33;border-radius:12px;padding:9px 14px;}
   .sign{margin-top:28px;text-align:right;font-size:15px;font-weight:700;color:var(--ink-2);}
 
   /* 하단 고정 신청 버튼 */
@@ -136,7 +136,10 @@
     <div class="top"><span>PK MATH</span><span class="badge"><i></i>선착순 모집중</span></div>
     <p class="eyebrow">2027 WINTER INTENSIVE</p>
     <h1>PK수학 2027<br><span>겨울특강</span> 안내</h1>
-    <div class="greet">안녕하세요. PK수학 원장 박선혜입니다.<br>2027 겨울특강을 안내드립니다.</div>
+    <div class="greet">
+      <img src="profile.jpg" alt="PK수학 원장 박선혜" width="72" height="72">
+      <p>안녕하세요.<br><b>PK수학 원장 박선혜</b>입니다.<br>2027 겨울특강을 안내드립니다.</p>
+    </div>
     <div class="cta">
       <a class="btn white" href="./">선착순 신청하러 가기 →</a>
       <a class="btn line" href="#info">특강 내용 보기</a>
@@ -171,8 +174,8 @@
     <h2>시간표 <span style="font-size:15px;color:var(--hot);font-weight:800">· 선착순 마감</span></h2>
     <div class="slots">
       <div class="slot" data-code="T1"><div class="no">1<small>타임</small></div><div class="t">10:00 ~ 12:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">중등부 · 월·수·금 (주 3회)</div></div>
-      <div class="slot hi" data-code="T2"><div class="no">2<small>타임</small></div><div class="t">13:00 ~ 15:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">고등부 · 월~금 (주 5일 매일반)</div></div>
-      <div class="slot hi" data-code="T3"><div class="no">3<small>타임</small></div><div class="t">15:00 ~ 17:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">고등부 · 월~금 (주 5일 매일반)</div></div>
+      <div class="slot" data-code="T2"><div class="no">2<small>타임</small></div><div class="t">13:00 ~ 15:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">고등부 · 월~금 (주 5일 매일반)</div></div>
+      <div class="slot" data-code="T3"><div class="no">3<small>타임</small></div><div class="t">15:00 ~ 17:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">고등부 · 월~금 (주 5일 매일반)</div></div>
     </div>
   </section>
 
@@ -181,7 +184,7 @@
     <h2>수강료</h2>
     <div class="fees">
       <div class="fee"><div class="k">중등부</div><div class="v">45<small>만 원</small></div><div class="s">주 3회반 · 총 36시간</div></div>
-      <div class="fee hi"><div class="k">고등부</div><div class="v">80<small>만 원</small></div><div class="s">주 5일 매일반 · 총 60시간</div></div>
+      <div class="fee"><div class="k">고등부</div><div class="v">80<small>만 원</small></div><div class="s">주 5일 매일반 · 총 60시간</div></div>
     </div>
     <div class="deadline">⏰ <span><b>12월 18일(금)까지</b> 타임별 선착순 마감</span></div>
   </section>
@@ -218,10 +221,6 @@
   <div class="closing">
     <p>겨울방학 6주,<br>아이의 수학 실력과 자신감을<br><span>한 단계 완벽하게</span> 끌어올릴 수 있는<br>결정적인 기회입니다.</p>
     <a class="btn white" href="./">선착순 신청하러 가기 →</a>
-    <div class="contact">
-      <a href="sms:010-5932-8216">💬 문자 보내기</a>
-      <a href="tel:010-5932-8216">📞 010-5932-8216</a>
-    </div>
   </div>
   <p class="sign">- PK수학 원장 박선혜 드림 -</p>
 </div>
