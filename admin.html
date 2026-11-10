@@ -217,7 +217,14 @@ const man = (n) => n >= 10000 ? (Math.round(n / 1000) / 10).toLocaleString("ko-K
 const KEYSTORE = "pk-admin-key";
 let key = "", data = null, filter = { status:"", code:"", unpaid:false, q:"" }, hasPw = true;
 
-function ss(get, v) { try { if (get) return sessionStorage.getItem(KEYSTORE) || ""; v ? sessionStorage.setItem(KEYSTORE, v) : sessionStorage.removeItem(KEYSTORE); } catch { return ""; } }
+// 로그인 유지: 이 기기(브라우저)에 저장해 두고, 로그아웃을 누를 때만 지웁니다.
+function ss(get, v) {
+  try {
+    if (get) return localStorage.getItem(KEYSTORE) || sessionStorage.getItem(KEYSTORE) || "";
+    sessionStorage.removeItem(KEYSTORE);
+    v ? localStorage.setItem(KEYSTORE, v) : localStorage.removeItem(KEYSTORE);
+  } catch { return ""; }
+}
 function toast(m, err) { const t = $("toast"); t.textContent = m; t.className = "toast show" + (err ? " err" : ""); clearTimeout(t._t); t._t = setTimeout(() => t.className = "toast", 2200); }
 async function call(body) { return PK.admin({ key, ...body }); }
 
@@ -226,7 +233,7 @@ async function showLogin(msg) {
   $("dashView").hidden = true; $("loginView").hidden = false;
   try { hasPw = (await PK.admin({ op:"hasPassword" })).hasPassword; } catch { hasPw = true; }
   $("loginTitle").textContent = hasPw ? "관리자 로그인" : "관리자 비밀번호 만들기";
-  $("loginLead").textContent = hasPw ? "특강 신청·결제 현황을 확인합니다." : "처음 한 번만 정하면 됩니다. 6자 이상으로 정해 주세요.";
+  $("loginLead").textContent = hasPw ? "한 번 로그인하면 이 기기에서는 로그아웃 전까지 다시 묻지 않습니다." : "처음 한 번만 정하면 됩니다. 6자 이상으로 정해 주세요.";
   $("pw2").hidden = hasPw; $("loginBtn").textContent = hasPw ? "로그인" : "비밀번호 만들고 시작";
   $("pw").autocomplete = hasPw ? "current-password" : "new-password";
   $("loginMsg").textContent = msg || "";
