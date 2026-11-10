@@ -12,20 +12,20 @@
  * 설치 방법은 저장소의 SETUP.md 를 보세요.
  */
 
-// 처음 설치했을 때 쓰는 기본 시즌 (운영안 추천안: 3타임 × 2시간, 반별 9명)
+// 처음 설치했을 때 쓰는 기본 시즌 (2027 겨울: 6주 · 3타임 × 2시간, 반별 9명)
 var DEFAULT_SEASON = {
   id: '2027-겨울',
   title: 'PK수학 겨울방학 특강',
   label: 'WINTER 2027',
-  period: '2027년 1~2월 · 5주',
+  period: '2027.1.4(월) ~ 2.26(금) · 6주',
   openAt: '',   // 접수 시작 'YYYY-MM-DDTHH:mm' (한국시간). 비우면 바로 접수
   closeAt: '',  // 접수 마감. 비우면 계속 접수
   fewAt: 3,     // 남은 자리가 이 수 이하이면 '마감임박' 표시
   contact: '',
   classes: [
-    { code: 'T1', name: '1타임 중등부', target: '중1·중2', time: '10:00–12:00', days: '월·수·금', sessions: '15회 30시간', price: 400000, capacity: 9 },
-    { code: 'T2', name: '2타임 고등 A반', target: '예비고1~고3', time: '12:00–14:00', days: '월~금 매일', sessions: '25회 50시간', price: 650000, capacity: 9 },
-    { code: 'T3', name: '3타임 고등 B반', target: '예비고1~고3', time: '14:00–16:00', days: '월~금 매일', sessions: '25회 50시간', price: 650000, capacity: 9 }
+    { code: 'T1', name: '1타임 중등부', target: '중1·중2', time: '10:00–12:00', days: '월·수·금', sessions: '18회 36시간', price: 450000, capacity: 9 },
+    { code: 'T2', name: '2타임 고등 A반', target: '예비고1~고3', time: '12:00–14:00', days: '월~금 매일', sessions: '30회 60시간', price: 800000, capacity: 9 },
+    { code: 'T3', name: '3타임 고등 B반', target: '예비고1~고3', time: '14:00–16:00', days: '월~금 매일', sessions: '30회 60시간', price: 800000, capacity: 9 }
   ]
 };
 

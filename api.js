@@ -27,12 +27,12 @@ window.PK = (function () {
   function demo() {
     const KEY = "pk-special-demo-v2";
     const DEFAULT_SEASON = {
-      id: "2027-겨울", title: "PK수학 겨울방학 특강", label: "WINTER 2027", period: "2027년 1~2월 · 5주",
+      id: "2027-겨울", title: "PK수학 겨울방학 특강", label: "WINTER 2027", period: "2027.1.4(월) ~ 2.26(금) · 6주",
       openAt: "", closeAt: "", fewAt: 3, contact: "",
       classes: [
-        { code: "T1", name: "1타임 중등부", target: "중1·중2", time: "10:00–12:00", days: "월·수·금", sessions: "15회 30시간", price: 400000, capacity: 9 },
-        { code: "T2", name: "2타임 고등 A반", target: "예비고1~고3", time: "12:00–14:00", days: "월~금 매일", sessions: "25회 50시간", price: 650000, capacity: 9 },
-        { code: "T3", name: "3타임 고등 B반", target: "예비고1~고3", time: "14:00–16:00", days: "월~금 매일", sessions: "25회 50시간", price: 650000, capacity: 9 },
+        { code: "T1", name: "1타임 중등부", target: "중1·중2", time: "10:00–12:00", days: "월·수·금", sessions: "18회 36시간", price: 450000, capacity: 9 },
+        { code: "T2", name: "2타임 고등 A반", target: "예비고1~고3", time: "12:00–14:00", days: "월~금 매일", sessions: "30회 60시간", price: 800000, capacity: 9 },
+        { code: "T3", name: "3타임 고등 B반", target: "예비고1~고3", time: "14:00–16:00", days: "월~금 매일", sessions: "30회 60시간", price: 800000, capacity: 9 },
       ],
     };
     const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };

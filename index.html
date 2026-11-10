@@ -90,6 +90,48 @@
   .timeline li::before{content:"";position:absolute;left:0;top:17px;width:9px;height:9px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px var(--soft);}
   .timeline .d{font-weight:800;color:var(--primary);white-space:nowrap;}
   .timeline b{color:var(--ink);}
+  .timeline li.due::before{background:var(--hot);box-shadow:0 0 0 3px var(--hot-l);}
+  .timeline li.due .d{color:var(--hot);}
+  .timeline li.brk::before{background:#f0a500;box-shadow:0 0 0 3px #fff3d6;}
+  .timeline li.brk .d{color:#b07800;}
+
+  /* 일정 달력 */
+  .cal{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:14px 12px 12px;margin-bottom:12px;}
+  .cal-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+  .cal-tabs button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 0;font-size:14.5px;font-weight:700;color:var(--ink-2);cursor:pointer;position:relative;}
+  .cal-tabs button small{display:block;font-size:11px;font-weight:600;color:var(--mute);margin-top:1px;}
+  .cal-tabs button.on{background:var(--deep);border-color:var(--deep);color:#fff;}
+  .cal-tabs button.on small{color:#bcd3ff;}
+  .cal-tabs button.hasdue::after{content:"";position:absolute;top:6px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--hot);}
+  .cal-title{text-align:center;font-size:17px;font-weight:800;margin:2px 0 8px;}
+  .cal-grid table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  .cal-grid th{font-size:12.5px;font-weight:700;color:var(--mute);padding:4px 0 6px;}
+  .cal-grid th:first-child{color:#e5484d;} .cal-grid th:last-child{color:var(--primary);}
+  .cal-grid td{height:66px;vertical-align:top;border-top:1px solid #edf2fa;padding:4px 0 0;position:relative;}
+  .day{display:flex;flex-direction:column;align-items:center;gap:2px;height:100%;}
+  .day .n{font-size:14px;font-weight:700;line-height:1.3;width:26px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:8px;}
+  .day.sun .n,.day.hol .n{color:#e5484d;}
+  .day.sat .n{color:var(--primary);}
+  .day.today .n{background:var(--soft);}
+  .day .hn{font-size:10px;color:#e5484d;font-weight:600;line-height:1.1;white-space:nowrap;}
+  .ev{font-size:10.5px;font-weight:800;line-height:1;padding:3px 5px;border-radius:6px;white-space:nowrap;background:var(--soft);color:var(--deep);z-index:2;}
+  .ev.due{background:var(--hot);color:#fff;animation:flash 1.2s ease-in-out infinite;}
+  .ev.open{background:var(--primary);color:#fff;}
+  .ev.class{background:var(--deep);color:#fff;}
+  .band{position:absolute;left:0;right:0;bottom:6px;height:9px;}
+  .band.class{background:var(--primary);}
+  .band.break{height:17px;bottom:4px;background:repeating-linear-gradient(135deg,#ffd36b 0 5px,#ffe39a 5px 10px);}
+  .band.start{left:6px;border-top-left-radius:6px;border-bottom-left-radius:6px;}
+  .band.end{right:6px;border-top-right-radius:6px;border-bottom-right-radius:6px;}
+  .band .bl{position:absolute;left:6px;top:0;line-height:17px;font-size:11px;font-weight:800;color:#6b4a00;white-space:nowrap;z-index:1;}
+  .cal-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;padding-top:10px;border-top:1px solid #edf2fa;font-size:12.5px;color:var(--ink-2);}
+  .cal-legend span::before{content:"";display:inline-block;width:16px;height:8px;border-radius:4px;margin-right:6px;vertical-align:1px;}
+  .lg-class::before{background:var(--primary);}
+  .lg-break::before{background:repeating-linear-gradient(135deg,#f0b400 0 3px,#ffe39a 3px 6px);}
+  .lg-due::before{background:var(--hot);}
+  .lg-ev::before{background:var(--soft);border:1px solid #b9d6fb;}
+  .cal-note{margin:8px 0 0;font-size:12.5px;color:var(--mute);}
+  @media (prefers-reduced-motion:reduce){.ev.due{animation:none;}}
 
   /* 신청 확인 */
   .lk{display:flex;gap:10px;}
@@ -157,17 +199,25 @@
   </section>
 
   <section>
-    <div class="h"><b>3</b><h2>안내</h2></div>
-    <!-- 시즌마다 바꾸는 곳: 주요 일정과 안내 문구 -->
-    <ol class="timeline">
-      <li><span class="d">12.18 (금)</span><span><b>특강비 결제 마감</b> · 결제 완료 시 신청 확정</span></li>
-      <li><span class="d">12.28 (월)</span><span>개별 커리큘럼·교재 일괄 안내</span></li>
-      <li><span class="d">1.4 (월)</span><span><b>개강</b></span></li>
-      <li><span class="d">2.26 (금)</span><span>종강</span></li>
-    </ol>
+    <div class="h"><b>3</b><h2>일정</h2></div>
+    <!-- 달력 내용은 schedule.js 에서 바꿉니다 -->
+    <div class="cal" id="cal">
+      <div class="cal-tabs" id="calTabs" role="tablist"></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span class="lg-class">특강 수업일</span><span class="lg-break">휴강</span><span class="lg-due">결제 마감</span><span class="lg-ev">주요 일정</span>
+      </div>
+      <p class="cal-note">1타임(중등부)은 월·수·금, 2·3타임(고등부)은 월~금 매일 수업합니다.</p>
+    </div>
+    <ol class="timeline" id="timeline"></ol>
+  </section>
+
+  <section>
+    <div class="h"><b>4</b><h2>안내</h2></div>
+    <!-- 시즌마다 바꾸는 곳: 안내 문구 -->
     <ul class="notes">
       <li>신청해주시는 <b>선착순으로 마감</b>되며, 정원이 찬 반은 <b>대기</b>로 접수됩니다.</li>
-      <li class="pay">접수 후 <b>‘결제선생’으로 특강비 결제를 안내</b>해 드립니다. <b>12월 18일(금)까지 결제가 완료되어야 신청이 최종 확정</b>됩니다.</li>
+      <li class="pay"><b>11월 27일(금)</b>에 <b>‘결제선생’으로 특강비 결제 안내</b>를 일괄 발송합니다. <b>12월 18일(금)까지 결제가 완료되어야 신청이 최종 확정</b>됩니다.</li>
       <li>기한 안에 결제가 되지 않으면 대기자에게 자리가 넘어갈 수 있습니다.</li>
       <li>개별 커리큘럼 및 교재는 <b>12월 28일(월)</b>에 일괄 안내해 드립니다.</li>
       <li>겨울방학 기간에는 <b>신청한 반의 시간표에 맞춰 등원</b>해 주세요.</li>
@@ -176,7 +226,7 @@
   </section>
 
   <section>
-    <div class="h"><b>4</b><h2>신청 확인</h2></div>
+    <div class="h"><b>5</b><h2>신청 확인</h2></div>
     <div class="lk">
       <input type="text" id="lkName" maxlength="20" placeholder="학생 이름" aria-label="학생 이름">
       <button type="button" class="btn" id="lkBtn">조회</button>
@@ -198,6 +248,7 @@
 
 <script src="config.js"></script>
 <script src="api.js"></script>
+<script src="schedule.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 const TAG = { open:"접수중", few:"마감임박", full:"마감 · 대기접수" };
@@ -296,7 +347,7 @@ function openSlip(r) {
   $("mIcon").textContent = ok ? "✓" : r.waitingNo;
   $("mTitle").textContent = ok ? "선착순 접수 완료!" : `대기 ${r.waitingNo}번으로 접수되었습니다`;
   $("mBody").innerHTML = "";
-  (ok ? [`${r.className} 신청이 완료되었습니다.`, "정해진 일정에 ‘결제선생’으로 특강비 결제 안내를 보내드립니다.", "12월 18일(금)까지 결제가 완료되어야 신청이 최종 확정됩니다."]
+  (ok ? [`${r.className} 신청이 완료되었습니다.`, "11월 27일(금)에 ‘결제선생’으로 특강비 결제 안내를 보내드립니다.", "12월 18일(금)까지 결제가 완료되어야 신청이 최종 확정됩니다."]
       : [`${r.className}은 정원이 마감되었습니다.`, "자리가 생기면 순서대로 연락드리겠습니다."])
     .forEach((t) => { const p = document.createElement("p"); p.textContent = t; $("mBody").appendChild(p); });
   $("modal").classList.add("show");
@@ -327,6 +378,67 @@ async function lookup() {
 }
 $("lkBtn").addEventListener("click", lookup);
 $("lkName").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); lookup(); } });
+
+/* ─── 일정 달력 (schedule.js) ─── */
+function renderSchedule() {
+  const S = window.PK_SCHEDULE;
+  if (!S) { $("cal").hidden = true; return; }
+  const z = (n) => String(n).padStart(2, "0");
+  const iso = (d) => `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
+  const parse = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+  const WD = "일월화수목금토";
+  const md = (s) => { const d = parse(s); return `${d.getMonth() + 1}.${d.getDate()} (${WD[d.getDay()]})`; };
+  const brk = (s) => (S.breaks || []).find((b) => s >= b.from && s <= b.to);
+  const kind = (d) => {
+    const s = iso(d), w = d.getDay();
+    if (w === 0 || w === 6 || s < S.classFrom || s > S.classTo) return "";
+    if (brk(s)) return "break";
+    return (S.holidays || {})[s] ? "" : "class";
+  };
+  const evOf = (s) => (S.events || []).filter((e) => e.date === s);
+  const today = iso(new Date());
+  const monthHas = (ym, f) => (S.events || []).some((e) => e.date.startsWith(ym) && f(e));
+  const months = S.months || [];
+  let cur = months.includes(today.slice(0, 7)) ? today.slice(0, 7) : months[0];
+
+  function drawMonth() {
+    const [y, m] = cur.split("-").map(Number), first = new Date(y, m - 1, 1), days = new Date(y, m, 0).getDate();
+    let html = `<div class="cal-title">${y}년 ${m}월</div><table><thead><tr>${[...WD].map((w) => `<th>${w}</th>`).join("")}</tr></thead><tbody><tr>`;
+    for (let i = 0; i < first.getDay(); i++) html += "<td></td>";
+    for (let d = 1; d <= days; d++) {
+      const dt = new Date(y, m - 1, d), s = iso(dt), w = dt.getDay(), k = kind(dt);
+      const hol = (S.holidays || {})[s];
+      const prev = new Date(y, m - 1, d - 1), next = new Date(y, m - 1, d + 1);
+      const start = k && (w === 1 || kind(prev) !== k || d === 1), end = k && (w === 5 || kind(next) !== k || d === days);
+      const b = k === "break" ? brk(s) : null;
+      const cls = ["day", w === 0 ? "sun" : w === 6 ? "sat" : "", hol ? "hol" : "", s === today ? "today" : ""].filter(Boolean).join(" ");
+      html += `<td><div class="${cls}"><span class="n">${d}</span>` +
+        (hol ? `<span class="hn">${esc(hol)}</span>` : "") +
+        evOf(s).map((e) => `<span class="ev ${esc(e.type)}">${esc(e.short || e.label)}</span>`).join("") +
+        `</div>` + (k ? `<span class="band ${k}${start ? " start" : ""}${end ? " end" : ""}">${b && s === b.from ? `<span class="bl">${esc(b.label)}</span>` : ""}</span>` : "") + `</td>`;
+      if (w === 6 && d < days) html += "</tr><tr>";
+    }
+    const last = new Date(y, m - 1, days).getDay();
+    for (let i = last; i < 6; i++) html += "<td></td>";
+    $("calGrid").innerHTML = html + "</tr></tbody></table>";
+    [...$("calTabs").children].forEach((b) => b.classList.toggle("on", b.dataset.m === cur));
+  }
+
+  $("calTabs").innerHTML = months.map((ym) => {
+    const [y, m] = ym.split("-").map(Number);
+    const sub = ym >= S.classFrom.slice(0, 7) && ym <= S.classTo.slice(0, 7) ? "특강" : monthHas(ym, () => true) ? "접수·결제" : "";
+    return `<button type="button" role="tab" data-m="${ym}" class="${monthHas(ym, (e) => e.type === "due") ? "hasdue" : ""}">${m}월<small>${sub}</small></button>`;
+  }).join("");
+  $("calTabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { cur = b.dataset.m; drawMonth(); } });
+  drawMonth();
+
+  // 주요 일정 목록 (달력 아래)
+  const items = (S.events || []).map((e) => ({ key: e.date, d: md(e.date), t: e.label, c: e.type === "due" ? "due" : "" }))
+    .concat((S.breaks || []).map((b) => ({ key: b.from, d: `${md(b.from).split(" ")[0]} ~ ${md(b.to).split(" ")[0]}`, t: b.label, c: "brk" })))
+    .sort((a, b) => a.key.localeCompare(b.key));
+  $("timeline").innerHTML = items.map((i) => `<li class="${i.c}"><span class="d">${esc(i.d)}</span><span>${i.c === "due" ? `<b>${esc(i.t)}</b>` : esc(i.t)}</span></li>`).join("");
+}
+renderSchedule();
 
 $("demoBar").hidden = !PK.DEMO;
 refresh();
