@@ -116,10 +116,54 @@ function apply_(b) {
     sh.appendRow(row);
     sh.getRange(sh.getLastRow(), C['결제안내'], 1, 2).insertCheckboxes();
     SpreadsheetApp.flush();
-    return { ok: true, status: status, receiptNo: no, className: cls.name, waitingNo: status === WAIT ? cnt.wait + 1 : 0 };
+    var result = { ok: true, status: status, receiptNo: no, className: cls.name, waitingNo: status === WAIT ? cnt.wait + 1 : 0 };
+    var after = { ok: cnt.ok + (status === OK ? 1 : 0), wait: cnt.wait + (status === WAIT ? 1 : 0), capacity: cls.capacity };
   } finally {
     lock.releaseLock();
   }
+  notify_(s, name, result, after);
+  return result;
+}
+
+// ───────── 신청 알림 (원장님 이메일) ─────────
+
+/** 새 신청이 들어오면 원장님(이 스크립트를 배포한 구글 계정) 이메일로 알림을 보냅니다. 끄려면 false. */
+var NOTIFY_EMAIL = true;
+var ADMIN_URL = 'https://rinha3037.github.io/pk-math-winter/admin.html';
+
+function notify_(s, name, r, after) {
+  if (!NOTIFY_EMAIL) return;
+  try {
+    var to = Session.getEffectiveUser().getEmail();
+    if (!to) return;
+    var head = r.status === OK ? '새 신청' : '대기 신청';
+    var subject = '[PK수학 특강] ' + head + ': ' + name + ' · ' + r.className + (r.status === WAIT ? ' (대기 ' + r.waitingNo + '번)' : '');
+    var body = [
+      s.title + ' 신청이 들어왔습니다.',
+      '',
+      '학생: ' + name,
+      '반: ' + r.className,
+      '상태: ' + (r.status === OK ? '접수' : '대기 ' + r.waitingNo + '번'),
+      '접수번호: ' + r.receiptNo,
+      '시각: ' + Utilities.formatDate(new Date(), TZ, 'M월 d일 HH:mm'),
+      '',
+      '이 반 현황: 접수 ' + after.ok + ' / 정원 ' + after.capacity + '명' + (after.wait ? ' · 대기 ' + after.wait + '명' : ''),
+      '',
+      '관리자 페이지: ' + ADMIN_URL
+    ].join('\n');
+    MailApp.sendEmail({ to: to, subject: subject, body: body, name: 'PK수학 특강 신청' });
+  } catch (err) {
+    return String(err); // 알림이 실패해도 신청 접수에는 영향을 주지 않습니다.
+  }
+}
+
+/** 설치 후 Apps Script 편집기에서 한 번 실행하세요: 이메일 권한을 승인하고 테스트 메일을 보냅니다. */
+function testNotification() {
+  var s = season_();
+  var c = s.classes[0];
+  var err = notify_(s, '테스트', { status: OK, receiptNo: '000', className: c.name, waitingNo: 0 }, { ok: 0, wait: 0, capacity: c.capacity });
+  if (err) throw new Error('알림 메일을 보내지 못했습니다: ' + err);
+  Logger.log('테스트 알림 메일을 ' + Session.getEffectiveUser().getEmail() + ' 로 보냈습니다.');
 }
 
 function lookup_(name) {
