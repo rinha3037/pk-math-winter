@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PK수학 2027 겨울특강 안내 (선착순 모집)</title>
+<meta name="description" content="겨울 6주, 1:1 맞춤 몰입 특강. 1월 11일(월) ~ 2월 26일(금) · 타임별 선착순 마감">
+<!-- 카카오톡·문자 링크 미리보기 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PK수학">
+<meta property="og:url" content="https://rinha3037.github.io/pk-math-winter/intro.html">
+<meta property="og:title" content="PK수학 2027 겨울특강 안내 (선착순 모집)">
+<meta property="og:description" content="겨울 6주, 1:1 맞춤 몰입 특강. 1월 11일(월) ~ 2월 26일(금) · 타임별 선착순 마감">
+<meta property="og:image" content="https://rinha3037.github.io/pk-math-winter/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="common.css">
+<style>
+  body{padding-bottom:96px;}
+  .wrap{max-width:680px;margin:0 auto;padding:0 16px;}
+
+  /* 상단 */
+  .hero{background:linear-gradient(150deg,#0a1440 0%,#1a4fd0 55%,#1598ff 100%);color:#fff;border-radius:0 0 30px 30px;padding:30px 0 36px;position:relative;overflow:hidden;}
+  .hero::after{content:"";position:absolute;right:-80px;top:-90px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,#3fe6e655,transparent 70%);}
+  .hero .in{max-width:680px;margin:0 auto;padding:0 16px;position:relative;z-index:1;}
+  .hero .top{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;letter-spacing:.12em;}
+  .badge{display:inline-flex;align-items:center;gap:7px;background:#ffffff26;border:1px solid #ffffff40;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:0;}
+  .badge i{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:ping 1.2s infinite;}
+  @keyframes ping{0%{box-shadow:0 0 0 0 #3fe6e6cc;}80%,100%{box-shadow:0 0 0 9px #3fe6e600;}}
+  .eyebrow{margin:22px 0 6px;font-size:14px;font-weight:700;color:var(--accent);letter-spacing:.06em;}
+  .hero h1{font-size:30px;line-height:1.3;font-weight:800;letter-spacing:-.02em;margin:0;word-break:keep-all;}
+  .hero h1 span{color:var(--accent);}
+  .greet{margin:18px 0 0;padding:14px 16px;border-left:3px solid var(--accent);background:#ffffff14;border-radius:0 12px 12px 0;font-size:15px;line-height:1.7;}
+  .hero .cta{margin-top:22px;display:flex;gap:8px;flex-wrap:wrap;}
+  .btn.white{background:#fff;color:var(--deep);}
+  .btn.white:hover{background:var(--soft);}
+  .btn.line{background:transparent;color:#fff;border:1.5px solid #ffffff66;}
+  .btn.line:hover{background:#ffffff1a;}
+
+  section{margin-top:40px;}
+  .kicker{font-size:13px;font-weight:800;color:var(--primary);letter-spacing:.08em;margin:0 0 6px;}
+  h2{font-size:22px;line-height:1.4;font-weight:800;letter-spacing:-.02em;margin:0 0 14px;word-break:keep-all;}
+
+  /* 메시지 */
+  .msg{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:22px 20px;font-size:16px;line-height:1.85;color:var(--ink-2);word-break:keep-all;}
+  .msg p{margin:0 0 14px;}
+  .msg p:last-child{margin:0;}
+  .msg strong{color:var(--ink);}
+  .msg mark{background:linear-gradient(transparent 55%,#3fe6e666 55%);color:var(--ink);font-weight:800;padding:0 2px;}
+
+  /* 안내 */
+  .info{background:#fff;border:1.5px solid var(--line);border-radius:20px;overflow:hidden;}
+  .row{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:16px 18px;border-top:1px solid var(--line);}
+  .row:first-child{border-top:0;}
+  .row dt{font-size:13.5px;font-weight:800;color:var(--primary);padding-top:2px;}
+  .row dd{margin:0;font-size:15.5px;font-weight:600;color:var(--ink);word-break:keep-all;}
+  .row dd small{display:block;font-size:13px;font-weight:500;color:var(--mute);margin-top:2px;}
+
+  .slots{display:grid;gap:10px;}
+  .slot{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center;}
+  .slot .no{grid-row:1/3;width:52px;height:52px;border-radius:14px;background:var(--soft);color:var(--deep);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:18px;line-height:1;}
+  .slot .no small{font-size:11px;font-weight:700;margin-top:3px;}
+  .slot.hi .no{background:linear-gradient(135deg,#0b1a4a,#1a4fd0 60%,#1598ff);color:#fff;}
+  .slot .t{font-size:18px;font-weight:800;letter-spacing:-.01em;}
+  .slot .t small{font-size:13px;font-weight:600;color:var(--mute);margin-left:4px;}
+  .slot .d{grid-column:2;font-size:14px;color:var(--ink-2);}
+  .slot .tag{grid-column:3;grid-row:1/3;}
+
+  .fees{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .fee{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:18px;}
+  .fee .k{font-size:14px;font-weight:800;color:var(--primary);}
+  .fee .v{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 2px;}
+  .fee .v small{font-size:16px;font-weight:700;margin-left:2px;}
+  .fee .s{font-size:13px;color:var(--mute);}
+  .fee.hi{background:linear-gradient(135deg,#0b1a4a,#1a4fd0 60%,#1598ff);border-color:transparent;color:#fff;}
+  .fee.hi .k{color:var(--accent);} .fee.hi .s{color:#cfe3ff;}
+
+  .deadline{margin-top:12px;display:flex;align-items:center;gap:10px;background:var(--hot-l);border:1.5px solid #ffc9b8;border-radius:16px;padding:14px 16px;font-size:15px;font-weight:700;color:#b33a1c;}
+  .deadline b{color:#8f2a10;}
+
+  /* 일정 */
+  .timeline{list-style:none;margin:0;padding:6px 18px;background:#fff;border:1.5px solid var(--line);border-radius:18px;}
+  .timeline li{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:baseline;padding:11px 0 11px 18px;position:relative;font-size:15px;color:var(--ink-2);}
+  .timeline li + li{border-top:1px dashed var(--line);}
+  .timeline li::before{content:"";position:absolute;left:0;top:18px;width:9px;height:9px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 3px var(--soft);}
+  .timeline .dt{font-weight:800;color:var(--primary);white-space:nowrap;}
+  .timeline li.due::before{background:var(--hot);box-shadow:0 0 0 3px var(--hot-l);}
+  .timeline li.due .dt{color:var(--hot);}
+  .timeline li.due span:last-child{font-weight:800;color:var(--ink);}
+  .timeline li.brk::before{background:#f0a500;box-shadow:0 0 0 3px #fff3d6;}
+  .timeline li.brk .dt{color:#b07800;}
+
+  /* Q&A */
+  .qa{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:20px;margin-bottom:12px;}
+  .qa .q{display:flex;gap:10px;font-size:17px;font-weight:800;line-height:1.45;color:var(--ink);word-break:keep-all;}
+  .qa .q::before{content:"Q";flex:none;width:28px;height:28px;border-radius:9px;background:var(--deep);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;}
+  .qa .a{margin-top:14px;padding-left:38px;font-size:15.5px;line-height:1.8;color:var(--ink-2);word-break:keep-all;}
+  .qa .a p{margin:0 0 10px;} .qa .a p:last-child{margin:0;}
+  .ans{display:inline-block;font-size:15px;font-weight:800;padding:4px 12px;border-radius:999px;margin-bottom:10px;}
+  .ans.no{background:var(--hot-l);color:#b33a1c;}
+  .ans.yes{background:var(--soft);color:var(--deep);}
+  .qa strong{color:var(--ink);}
+  .when{display:inline-flex;align-items:center;gap:8px;background:var(--soft);color:var(--deep);font-weight:800;border-radius:12px;padding:8px 12px;font-size:14.5px;}
+
+  .warn{background:#fff8e6;border:1.5px solid #f6dc9a;border-radius:18px;padding:16px 18px;font-size:15px;line-height:1.75;color:#6b4a00;word-break:keep-all;}
+  .warn b{color:#4d3500;}
+
+  /* 마무리 */
+  .closing{margin-top:40px;background:linear-gradient(150deg,#0a1440 0%,#1a4fd0 60%,#1598ff 100%);color:#fff;border-radius:24px;padding:28px 22px;text-align:center;}
+  .closing p{margin:0;font-size:18px;line-height:1.65;font-weight:700;word-break:keep-all;}
+  .closing p span{color:var(--accent);}
+  .closing .btn{margin-top:20px;width:100%;font-size:17px;padding:16px;}
+  .contact{margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .contact a{display:inline-flex;align-items:center;gap:6px;color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;background:#ffffff1f;border:1px solid #ffffff33;border-radius:12px;padding:9px 14px;}
+  .sign{margin-top:28px;text-align:right;font-size:15px;font-weight:700;color:var(--ink-2);}
+
+  /* 하단 고정 신청 버튼 */
+  .sticky{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 30%);z-index:5;}
+  .sticky .btn{display:flex;max-width:680px;margin:0 auto;width:100%;font-size:17px;padding:16px;box-shadow:0 10px 24px -8px #0b1a4a80;}
+  .sticky .btn i{font-style:normal;font-size:12.5px;font-weight:700;background:#ffffff2e;border-radius:999px;padding:3px 9px;}
+
+  @media (max-width:480px){
+    .hero h1{font-size:25px;}
+    h2{font-size:20px;}
+    .row{grid-template-columns:78px 1fr;padding:14px 16px;}
+    .fee .v{font-size:26px;}
+    .slot{padding:14px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="in">
+    <div class="top"><span>PK MATH</span><span class="badge"><i></i>선착순 모집중</span></div>
+    <p class="eyebrow">2027 WINTER INTENSIVE</p>
+    <h1>PK수학 2027<br><span>겨울특강</span> 안내</h1>
+    <div class="greet">안녕하세요. PK수학 원장 박선혜입니다.<br>2027 겨울특강을 안내드립니다.</div>
+    <div class="cta">
+      <a class="btn white" href="./">선착순 신청하러 가기 →</a>
+      <a class="btn line" href="#info">특강 내용 보기</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <p class="kicker">WHY WINTER</p>
+    <h2>📌 학생들에게 방학은<br>정말 중요한 시기입니다.</h2>
+    <div class="msg">
+      <p>한 학년 중에 선행을 제대로 나갈 수 있는 시간은 <strong>방학 기간밖에 없습니다.</strong></p>
+      <p>정규 수업 때는 시험 대비와 내신 심화 문제를 다루는 데 집중되어 있어, 새로운 단원과 다음 학년의 진도 학습은 방학 시기에 진행되어야 합니다.</p>
+      <p>다산 PK수학은 이 겨울 6주 동안 가장 밀도 높게 아이들의 수학 성적을 높일 수 있도록 <mark>몰입 특강</mark>을 진행합니다.</p>
+    </div>
+  </section>
+
+  <section id="info">
+    <p class="kicker">PROGRAM</p>
+    <h2>🔷 PK수학 2027 겨울특강 안내</h2>
+    <dl class="info">
+      <div class="row"><dt>대상 학년</dt><dd>중1 ~ 고3<small>PK 재원생 대상</small></dd></div>
+      <div class="row"><dt>특강 기간</dt><dd>2027년 1월 11일(월) ~ 2월 26일(금)<small>총 6주 집중 과정 · 설 연휴 주(2/8~2/12) 휴강</small></dd></div>
+      <div class="row"><dt>수업 방식</dt><dd>1:1 맞춤 선행 커리큘럼<small>타임별 정원제 · 배정 타임 정시 등원</small></dd></div>
+    </dl>
+  </section>
+
+  <section>
+    <p class="kicker">TIMETABLE</p>
+    <h2>시간표 <span style="font-size:15px;color:var(--hot);font-weight:800">· 선착순 마감</span></h2>
+    <div class="slots">
+      <div class="slot" data-code="T1"><div class="no">1<small>타임</small></div><div class="t">10:00 ~ 12:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">중등부 · 월·수·금 (주 3회)</div></div>
+      <div class="slot hi" data-code="T2"><div class="no">2<small>타임</small></div><div class="t">13:00 ~ 15:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">고등부 · 월~금 (주 5일 매일반)</div></div>
+      <div class="slot hi" data-code="T3"><div class="no">3<small>타임</small></div><div class="t">15:00 ~ 17:00<small>2시간</small></div><span class="tag open">접수중</span><div class="d">고등부 · 월~금 (주 5일 매일반)</div></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">TUITION</p>
+    <h2>수강료</h2>
+    <div class="fees">
+      <div class="fee"><div class="k">중등부</div><div class="v">45<small>만 원</small></div><div class="s">주 3회반 · 총 36시간</div></div>
+      <div class="fee hi"><div class="k">고등부</div><div class="v">80<small>만 원</small></div><div class="s">주 5일 매일반 · 총 60시간</div></div>
+    </div>
+    <div class="deadline">⏰ <span><b>12월 18일(금)까지</b> 타임별 선착순 마감</span></div>
+  </section>
+
+  <section>
+    <p class="kicker">SCHEDULE</p>
+    <h2>주요 일정</h2>
+    <ol class="timeline" id="timeline"></ol>
+  </section>
+
+  <section>
+    <p class="kicker">Q&amp;A</p>
+    <h2>자주 묻는 질문</h2>
+    <div class="qa">
+      <div class="q">주 2회만 듣거나, 요일을 나누어 들어도 되나요?</div>
+      <div class="a">
+        <span class="ans no">아니요, 불가능합니다 ☹️</span>
+        <p>특강 기간 동안에는 타임별 좌석 정원 관리와 함께, 아이들의 흐트러짐 없는 학습 루틴과 몰입도를 유지하기 위해 <strong>반드시 배정된 타임에 맞춰 정시 등원</strong>해야 합니다.</p>
+        <p><strong>공부는 해야 할 시기에 집중해서 제대로</strong> 해야 합니다.</p>
+      </div>
+    </div>
+    <div class="qa">
+      <div class="q">특강도 지금처럼 1:1로 진행되나요?</div>
+      <div class="a">
+        <span class="ans yes">네, 맞습니다 🙂</span>
+        <p>겨울특강 역시 학생 개별 진도와 현재 학습 상황에 맞추어 하루하루 꼼꼼하게 압축된 <strong>1:1 맞춤 선행 커리큘럼</strong>으로 진행됩니다.</p>
+        <p>이번 특강 기간 동안 진행할 개별 커리큘럼 및 교재는 학생과 면담 후 학습 목표를 설정하여 일괄 안내해 드립니다.</p>
+        <span class="when">📅 안내 예정일 · 12월 28일(월)</span>
+      </div>
+    </div>
+    <div class="warn">※ <b>특강은 추가 보강이 진행되지 않습니다.</b><br>원활한 수업 진행과 학습 결손 방지를 위해 겨울방학 기간 내 결석 및 지각이 없도록 학부모님의 적극적인 지도 부탁드립니다.</div>
+  </section>
+
+  <div class="closing">
+    <p>겨울방학 6주,<br>아이의 수학 실력과 자신감을<br><span>한 단계 완벽하게</span> 끌어올릴 수 있는<br>결정적인 기회입니다.</p>
+    <a class="btn white" href="./">선착순 신청하러 가기 →</a>
+    <div class="contact">
+      <a href="sms:010-5932-8216">💬 문자 보내기</a>
+      <a href="tel:010-5932-8216">📞 010-5932-8216</a>
+    </div>
+  </div>
+  <p class="sign">- PK수학 원장 박선혜 드림 -</p>
+</div>
+
+<div class="sticky"><a class="btn" href="./">겨울특강 선착순 신청하기 <i id="stickyTag">접수중</i></a></div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script src="schedule.js"></script>
+<script>
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
+// 주요 일정: schedule.js 와 같은 내용을 씁니다.
+(function () {
+  const S = window.PK_SCHEDULE; if (!S) return;
+  const WD = "일월화수목금토";
+  const md = (s, wd = true) => { const [y, m, d] = s.split("-").map(Number); const dt = new Date(y, m - 1, d); return `${m}.${d}` + (wd ? ` (${WD[dt.getDay()]})` : ""); };
+  const items = (S.events || []).map((e) => ({ k: e.date, d: md(e.date), t: e.label, c: e.type === "due" ? "due" : "" }))
+    .concat((S.breaks || []).map((b) => ({ k: b.from, d: `${md(b.from, false)} ~ ${md(b.to, false)}`, t: b.label, c: "brk" })))
+    .sort((a, b) => a.k.localeCompare(b.k));
+  document.getElementById("timeline").innerHTML = items.map((i) => `<li class="${i.c}"><span class="dt">${esc(i.d)}</span><span>${esc(i.t)}</span></li>`).join("");
+})();
+
+// 타임별 접수 상태 (신청 페이지와 같은 기준: 접수중 / 마감임박 / 마감 · 대기접수)
+(async function () {
+  const TAG = { open:"접수중", few:"마감임박", full:"마감 · 대기접수" };
+  try {
+    const r = await PK.publicInfo();
+    if (!r.ok) return;
+    r.classes.forEach((c) => {
+      const el = document.querySelector(`.slot[data-code="${CSS.escape(c.code)}"] .tag`);
+      if (el) { el.className = "tag " + c.state; el.textContent = TAG[c.state]; }
+    });
+    const st = document.getElementById("stickyTag");
+    if (r.phase === "before") st.textContent = "11/16 오픈";
+    else if (r.phase === "closed") st.textContent = "접수 마감";
+    else if (r.classes.some((c) => c.state === "few")) st.textContent = "마감임박";
+  } catch {}
+})();
+</script>
+</body>
+</html>

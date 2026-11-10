@@ -29,7 +29,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font
 button,input,select,textarea{font-family:inherit;}
 .demo{background:var(--deep);color:#fff;font-size:12.5px;text-align:center;padding:6px 16px;}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:14px 20px;font-size:16px;font-weight:700;cursor:pointer;background:var(--primary);color:#fff;transition:background .15s, transform .1s;}
+.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:14px 20px;font-size:16px;font-weight:700;cursor:pointer;background:var(--primary);color:#fff;transition:background .15s, transform .1s;}
 .btn:hover:not(:disabled){background:var(--deep);}
 .btn:active:not(:disabled){transform:translateY(1px);}
 .btn:disabled{background:#bccbe3;cursor:not-allowed;}
