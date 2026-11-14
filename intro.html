@@ -207,7 +207,7 @@
     <h2>🔷 PK수학 2027 겨울특강 안내</h2>
     <dl class="info">
       <div class="row"><dt>대상 학년</dt><dd>중1 ~ 고3<small>PK 재원생 대상 · 2027년 새 학년 기준</small></dd></div>
-      <div class="row"><dt>특강 기간</dt><dd>2027년 1월 11일(월) ~ 2월 26일(금)<small>총 6주 집중 과정 · 설 연휴 주(2/8~2/12) 휴강</small></dd></div>
+      <div class="row"><dt>특강 기간</dt><dd>2027년 1월 11일(월) ~ 2월 26일(금)<small>총 6주 집중 과정 · 설 연휴 주(2/8~2/12) 특강 휴강 (정규 수업은 진행됩니다. 2/10~13)</small></dd></div>
       <div class="row"><dt>결제 안내</dt><dd>신청일로부터 1~2일 이내 ‘결제선생’으로 발송<small>12월 18일(금)까지 결제 완료 시 신청 확정</small></dd></div>
       <div class="row"><dt>수업 방식</dt><dd>1:1 맞춤 선행 커리큘럼<small>타임별 정원제 · 배정 타임 정시 등원</small></dd></div>
     </dl>
@@ -300,7 +300,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<
   const WD = "일월화수목금토";
   const md = (s, wd = true) => { const [y, m, d] = s.split("-").map(Number); const dt = new Date(y, m - 1, d); return `${m}.${d}` + (wd ? ` (${WD[dt.getDay()]})` : ""); };
   const items = (S.events || []).map((e) => ({ k: e.date, d: md(e.date), t: e.label, c: e.type === "due" ? "due" : "" }))
-    .concat((S.breaks || []).map((b) => ({ k: b.from, d: `${md(b.from, false)} ~ ${md(b.to, false)}`, t: b.label, c: "brk" })))
+    .concat((S.breaks || []).map((b) => ({ k: b.from, d: `${md(b.from, false)} ~ ${md(b.to, false)}`, t: b.label + (b.note ? ` (${b.note})` : ""), c: "brk" })))
     .sort((a, b) => a.k.localeCompare(b.k));
   document.getElementById("timeline").innerHTML = items.map((i) => `<li class="${i.c}"><span class="dt">${esc(i.d)}</span><span>${esc(i.t)}</span></li>`).join("");
 })();
